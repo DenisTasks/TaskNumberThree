@@ -13,11 +13,11 @@ namespace TaskNumberThree.RealModel
         public int MobileNumber { get; private set; }
         private DateTime DateOfLastChange;
 
-        public Agreement(TariffPlan tariffPlan, User user)
+        public Agreement(TariffPlan tariffPlan, User user, int mobileNumber)
         {
             TariffPlan = tariffPlan;
             User = user;
-            MobileNumber = 111;
+            MobileNumber = mobileNumber;
             DateOfLastChange = DateTime.Now;
         }
         public bool ChangeTariffPlan(TariffPlan newTariffPlan)
@@ -33,7 +33,7 @@ namespace TaskNumberThree.RealModel
             }
             else
             {
-                Console.WriteLine("Please, wait a month after last changed tariff plan!");
+                Console.WriteLine("Please, wait a month after last change of your tariff plan!");
                 return false;
             }
         }

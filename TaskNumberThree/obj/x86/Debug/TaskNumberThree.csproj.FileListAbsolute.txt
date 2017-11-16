@@ -3,3 +3,8 @@ C:\Documents and Settings\Admin\Рабочий стол\TaskNumberThree\TaskNumb
 C:\Documents and Settings\Admin\Рабочий стол\TaskNumberThree\TaskNumberThree\bin\Debug\TaskNumberThree.pdb
 C:\Documents and Settings\Admin\Рабочий стол\TaskNumberThree\TaskNumberThree\obj\x86\Debug\TaskNumberThree.exe
 C:\Documents and Settings\Admin\Рабочий стол\TaskNumberThree\TaskNumberThree\obj\x86\Debug\TaskNumberThree.pdb
+D:\TaskNumberThree\TaskNumberThree\obj\x86\Debug\TaskNumberThree.exe
+D:\TaskNumberThree\TaskNumberThree\obj\x86\Debug\TaskNumberThree.pdb
+D:\TaskNumberThree\TaskNumberThree\bin\Debug\TaskNumberThree.exe
+D:\TaskNumberThree\TaskNumberThree\bin\Debug\TaskNumberThree.pdb
+D:\TaskNumberThree\TaskNumberThree\obj\x86\Debug\ResolveAssemblyReference.cache
