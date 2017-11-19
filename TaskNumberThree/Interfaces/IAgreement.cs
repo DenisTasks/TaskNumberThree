@@ -8,6 +8,8 @@ namespace TaskNumberThree.Interfaces
 {
     public interface IAgreement
     {
+        TariffPlan TariffPlan { get; }
+        User User { get; }
         int MobileNumber { get; }
         bool ChangeTariffPlan(TariffPlan tariffPlan);
     }

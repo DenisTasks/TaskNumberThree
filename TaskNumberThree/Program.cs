@@ -15,7 +15,12 @@ namespace TaskNumberThree
             Terminal myTerminal = mts.NewUserWithTerminal(
                 new TariffPlan("Unlim", 10, 4, 20), 
                 new User("Denis", "Tarasevich"), 298666683);
-            myTerminal.CreateCall(298840666);
+            Terminal yourTerminal = mts.NewUserWithTerminal(
+                new TariffPlan("Unlim", 10, 4, 20),
+                new User("Sergey", "Tarasevich"), 298840666);
+            myTerminal.TurnOn();
+            yourTerminal.TurnOn();
+            myTerminal.CreateCall(yourTerminal.MobileNumber);
         }
     }
 }
