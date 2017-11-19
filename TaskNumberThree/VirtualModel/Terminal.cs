@@ -24,6 +24,7 @@ namespace TaskNumberThree.VirtualModel
 
         public event EventHandler<CallEventArgs> NewCallEvent;
         public event EventHandler<AnswerEventArgs> AnswerEvent;
+        public event EventHandler<EndEventArgs> EndEvent;
 
         // виртуальный защищенный метод, проверяющий наличие подписчиков(290)
         protected virtual void OnNewCall(CallEventArgs e)
@@ -80,10 +81,17 @@ namespace TaskNumberThree.VirtualModel
         // Terminal 2 (for example)
         public void GetCallFromATS(object sender, CallEventArgs e)
         {
-            Console.WriteLine("ТЕРМИНАЛ2: Звонок от " + "{0}" + " принят на терминале " + "{1}", e.MobileNumber, e.TargetMobileNumber);
+            Console.WriteLine("ТЕРМИНАЛ2: Запрос от " + "{0}" + " принят на терминале " + "{1}", e.MobileNumber, e.TargetMobileNumber);
             Console.ReadLine();
-            AnswerToCallFromATS(e, CallStatus.Successfuly);
-            // или отклонить(то же, что и закончить разговор) - списание денег, отключение, занесение информации в билинг
+            Random answer = new Random();
+            if (answer.Next(1, 10) %2 == 0)
+            {
+                AnswerToCallFromATS(e, CallStatus.Successfuly);
+            }
+            else
+            {
+                RejectedCallFromATS(e, CallStatus.NotSuccessfuly);
+            }
         }
 
         public void AnswerToCallFromATS(CallEventArgs e, CallStatus status)
@@ -102,5 +110,20 @@ namespace TaskNumberThree.VirtualModel
             }
         }
 
+        public void RejectedCallFromATS(CallEventArgs e, CallStatus status)
+        {
+            Console.WriteLine("ТЕРМИНАЛ2: Я сбросил звонок");
+            Console.ReadLine();
+            OnEnd(new EndEventArgs(e.MobileNumber, e.TargetMobileNumber, status));
+        }
+
+        protected virtual void OnEnd(EndEventArgs e)
+        {
+            EventHandler<EndEventArgs> temp = EndEvent;
+            if (temp != null)
+            {
+                temp(this, e);
+            }
+        }
     }
 }

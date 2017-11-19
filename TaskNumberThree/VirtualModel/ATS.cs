@@ -22,6 +22,7 @@ namespace TaskNumberThree.VirtualModel
             _usersMts.Add(mobileNumber, defaultPort);
             defaultPort.NewCallEvent += CreateCall;
             defaultPort.NewAnswerEvent += CreateCall;
+            defaultPort.EndEvent += EndCall;
             return newTerminal;
         }
 
@@ -65,6 +66,12 @@ namespace TaskNumberThree.VirtualModel
                 targetPort.GetAnswer(inATS.MobileNumber, inATS.TargetMobileNumber, inATS.Status);
             }
             #endregion
+        }
+
+        public void EndCall(object sender, EndEventArgs e)
+        {
+            Console.WriteLine("АТС: " + e.TargetMobileNumber + " сбросил звонок от " + e.MobileNumber);
+            Console.ReadLine();
         }
     }
 }

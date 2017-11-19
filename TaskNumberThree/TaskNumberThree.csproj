@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="AnyEventArgs\AnswerEventArgs.cs" />
     <Compile Include="AnyEventArgs\CallEventArgs.cs" />
+    <Compile Include="AnyEventArgs\EndEventArgs.cs" />
     <Compile Include="AnyEventArgs\ICreateCall.cs" />
     <Compile Include="Interfaces\IAgreement.cs" />
     <Compile Include="Program.cs" />

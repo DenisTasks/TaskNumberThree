@@ -19,6 +19,7 @@ namespace TaskNumberThree.VirtualModel
         public event EventHandler<CallEventArgs> GetCallFromATSEvent;
         public event EventHandler<AnswerEventArgs> NewAnswerEvent;
         public event EventHandler<AnswerEventArgs> GetAnswerEvent;
+        public event EventHandler<EndEventArgs> EndEvent;
 
         protected virtual void OnNewCall(CallEventArgs e)
         {
@@ -36,6 +37,7 @@ namespace TaskNumberThree.VirtualModel
                 Status = PortStatus.Enabled;
                 terminal.NewCallEvent += CreateCall; // как только произойдёт событие в терминале, вызовется метод in Port
                 terminal.AnswerEvent += CreateAnswer; // второй порт (сигнализирует, что вызываемый абонент как-то ответил)
+                terminal.EndEvent += CreateEnd; // второй порт сообщает на АТС, что звонок сброшен
                 return true;
             }
             else
@@ -102,6 +104,22 @@ namespace TaskNumberThree.VirtualModel
         protected virtual void OnNewAnswer(AnswerEventArgs e)
         {
             EventHandler<AnswerEventArgs> temp = NewAnswerEvent;
+            if (temp != null)
+            {
+                temp(this, e);
+            }
+        }
+
+        public void CreateEnd(object sender, EndEventArgs e)
+        {
+            Console.WriteLine("ПОРТ2: " + e.TargetMobileNumber + " сбросил звонок");
+            Console.ReadLine();
+            OnEnd(e);
+        }
+
+        protected virtual void OnEnd(EndEventArgs e)
+        {
+            EventHandler<EndEventArgs> temp = EndEvent;
             if (temp != null)
             {
                 temp(this, e);
