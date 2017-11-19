@@ -48,12 +48,16 @@ namespace TaskNumberThree.VirtualModel
 
         public void CreateCall(object sender, CallEventArgs e)
         {
+            Status = PortStatus.Busy;
             OnNewCall(new CallEventArgs(e.MobileNumber, e.TargetMobileNumber));
         }
 
         public void GetAnswer(int mobileNumber, int targetMobileNumber, CallStatus status)
         {
-            Console.WriteLine("ПОРТ1: абонент " + targetMobileNumber + " как-то отреагировал на звонок");
+            if (status == CallStatus.NotSuccessfuly)
+            {
+                Status = PortStatus.Enabled;
+            }
             OnGetAnswer(new AnswerEventArgs(mobileNumber, targetMobileNumber, status));
         }
 
@@ -67,12 +71,6 @@ namespace TaskNumberThree.VirtualModel
         }
 
 
-
-
-
-
-
-
         //=======================================================================
 
 
@@ -81,7 +79,8 @@ namespace TaskNumberThree.VirtualModel
         // Port2 (for example)
         public void CallFromATS(int mobileNumber, int targetMobileNumber)
         {
-            Console.WriteLine("ПОРТ2: Поступил запрос с АТС с номера " + mobileNumber + " на номер " + targetMobileNumber);
+            Console.WriteLine("ПОРТ: Поступил запрос с АТС с номера " + mobileNumber + " на номер " + targetMobileNumber);
+            Status = PortStatus.Busy;
             OnNewCallFromATS(new CallEventArgs(mobileNumber, targetMobileNumber));
         }
 
@@ -96,7 +95,7 @@ namespace TaskNumberThree.VirtualModel
 
         public void CreateAnswer(object sender, AnswerEventArgs e)
         {
-            Console.WriteLine("ПОРТ2: " + e.MobileNumber + " дозвонился до " + e.TargetMobileNumber);
+            Console.WriteLine("ПОРТ: " + e.MobileNumber + " дозвонился до " + e.TargetMobileNumber);
             Console.ReadLine();
             OnNewAnswer(e);
         }
@@ -112,7 +111,9 @@ namespace TaskNumberThree.VirtualModel
 
         public void CreateEnd(object sender, EndEventArgs e)
         {
-            Console.WriteLine("ПОРТ2: " + e.TargetMobileNumber + " сбросил звонок");
+            Console.WriteLine("ПОРТ: " + e.MobileNumber + " сбросил звонок ");
+            Status = PortStatus.Enabled;
+            Console.WriteLine("ПОРТ: " + Status);
             Console.ReadLine();
             OnEnd(e);
         }

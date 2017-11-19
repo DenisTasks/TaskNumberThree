@@ -10,13 +10,10 @@ namespace TaskNumberThree.AnyEventArgs
     {
         public int MobileNumber { get; private set; }
         public int TargetMobileNumber { get; private set; }
-        public CallStatus Status;
 
-        public EndEventArgs(int mobileNumber, int targetMobileNumber, CallStatus status)
+        public EndEventArgs(int mobileNumber)
         {
             MobileNumber = mobileNumber;
-            TargetMobileNumber = targetMobileNumber;
-            Status = status;
         }
     }
 }

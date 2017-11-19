@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using TaskNumberThree.RealModel;
 using TaskNumberThree.VirtualModel;
 
@@ -14,13 +15,20 @@ namespace TaskNumberThree
             ATS mts = new ATS();
             Terminal myTerminal = mts.NewUserWithTerminal(
                 new TariffPlan("Unlim", 10, 4, 20), 
-                new User("Denis", "Tarasevich"), 298666683);
+                new User("Denis", "Tarasevich", 10), 298666683);
             Terminal yourTerminal = mts.NewUserWithTerminal(
                 new TariffPlan("Unlim", 10, 4, 20),
-                new User("Sergey", "Tarasevich"), 298840666);
+                new User("Sergey", "Tarasevich", 10), 298840666);
             myTerminal.TurnOn();
             yourTerminal.TurnOn();
             myTerminal.CreateCall(yourTerminal.MobileNumber);
+            Thread.Sleep(1000);
+  //          myTerminal.RejectedCall();
+            Terminal yourTerminal2 = mts.NewUserWithTerminal(
+                new TariffPlan("Unlim", 10, 4, 20),
+                new User("Viachaslau", "Tarasevich", 10), 295399992);
+            yourTerminal2.TurnOn();
+            yourTerminal2.CreateCall(myTerminal.MobileNumber);
         }
     }
 }
