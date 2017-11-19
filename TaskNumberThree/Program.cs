@@ -19,16 +19,17 @@ namespace TaskNumberThree
             Terminal yourTerminal = mts.NewUserWithTerminal(
                 new TariffPlan("Unlim", 10, 4, 20),
                 new User("Sergey", "Tarasevich", 10), 298840666);
-            myTerminal.TurnOn();
-            yourTerminal.TurnOn();
-            myTerminal.CreateCall(yourTerminal.MobileNumber);
-            Thread.Sleep(1000);
-  //          myTerminal.RejectedCall();
             Terminal yourTerminal2 = mts.NewUserWithTerminal(
                 new TariffPlan("Unlim", 10, 4, 20),
                 new User("Viachaslau", "Tarasevich", 10), 295399992);
+            myTerminal.TurnOn();
+            yourTerminal.TurnOn();
             yourTerminal2.TurnOn();
+            myTerminal.CreateCall(yourTerminal.MobileNumber);
+            Thread.Sleep(1000);
+            myTerminal.RejectedCall();
             yourTerminal2.CreateCall(myTerminal.MobileNumber);
+            yourTerminal.CreateCall(myTerminal.MobileNumber);
         }
     }
 }

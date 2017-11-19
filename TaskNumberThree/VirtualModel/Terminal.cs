@@ -55,13 +55,15 @@ namespace TaskNumberThree.VirtualModel
         {
             if (e.Status == CallStatus.Successfuly)
             {
-                Console.WriteLine("ТЕРМИНАЛ: соединение установлено с абонентом " + e.TargetMobileNumber);
+                // mobile - вызывающий, target - принимающий
+                Console.WriteLine("ТЕРМИНАЛ " + e.MobileNumber + " : соединение установлено с абонентом " + e.TargetMobileNumber);
                 Console.WriteLine(_defaultPort.Status);
                 Console.ReadLine();
             }
             else
             {
-                Console.WriteLine("ТЕРМИНАЛ: сбросил он => " + e.TargetMobileNumber);
+                // реакция принимающего (его уведомляем, что я вызывающий сбросил)
+                Console.WriteLine("ТЕРМИНАЛ " + e.TargetMobileNumber + " : сбросил он => " + e.MobileNumber);
                 Console.WriteLine(_defaultPort.Status);
                 Console.ReadLine();
             }
@@ -81,7 +83,8 @@ namespace TaskNumberThree.VirtualModel
             Console.WriteLine("ТЕРМИНАЛ: Запрос от " + "{0}" + " принят на терминале " + "{1}", e.MobileNumber, e.TargetMobileNumber);
             Console.ReadLine();
             Random answer = new Random();
-            if (answer.Next(1, 10) %2 == 0)
+            Console.WriteLine("Принять звонок?");
+            if (Console.ReadKey().KeyChar == 'y')
             {
                 AnswerToCallFromATS(e, CallStatus.Successfuly);
             }
@@ -93,7 +96,7 @@ namespace TaskNumberThree.VirtualModel
 
         public void AnswerToCallFromATS(CallEventArgs e, CallStatus status)
         {
-            Console.WriteLine("ТЕРМИНАЛ: " + e.MobileNumber + " дозвонился до " + e.TargetMobileNumber);
+            Console.WriteLine("ТЕРМИНАЛ " + _mobileNumber + ": поднял трубку на звонок от " + e.MobileNumber);
             Console.ReadLine();
             OnAnswer(new AnswerEventArgs(e.MobileNumber, e.TargetMobileNumber, status));
         }

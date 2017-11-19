@@ -45,7 +45,6 @@ namespace TaskNumberThree.VirtualModel
                     if (targetPort.Status == PortStatus.Enabled) // если у вызываемого абонента телефон включен
                     {
                         _onlineList.Add(mobileNumber, targetMobileNumber);
-                        Console.WriteLine("OnlineList add " + _onlineList.ElementAt(0));
                         targetPort.CallFromATS(mobileNumber, targetMobileNumber);
                     }
                     else if (targetPort.Status == PortStatus.Busy)
@@ -70,7 +69,7 @@ namespace TaskNumberThree.VirtualModel
             if (e is AnswerEventArgs)
             {
                 CallStatus status = ((AnswerEventArgs)e).Status;
-                targetPort.GetAnswer(mobileNumber, targetMobileNumber, status);
+                targetPort.GetAnswer(e.MobileNumber, e.TargetMobileNumber, status);
             }
             #endregion
         }
@@ -84,9 +83,10 @@ namespace TaskNumberThree.VirtualModel
             if (_onlineList.Any(x => x.Key.Equals(e.MobileNumber)))
             {
                 mobileNumber = e.MobileNumber;
-                targetMobileNumber = GetKey(e.MobileNumber);
+                targetMobileNumber = _onlineList[mobileNumber];
                 port = _usersMts[mobileNumber].Item2;
                 targetPort = _usersMts[targetMobileNumber].Item2;
+                targetPort.GetAnswer(mobileNumber, targetMobileNumber, CallStatus.NotSuccessfuly);
             }
             // if (_onlineList.Any(x => x.Value.Equals(e.MobileNumber)))
             else
@@ -95,10 +95,9 @@ namespace TaskNumberThree.VirtualModel
                 mobileNumber = GetKey(e.MobileNumber);
                 targetPort = _usersMts[mobileNumber].Item2;
                 port = _usersMts[targetMobileNumber].Item2;
+                targetPort.GetAnswer(targetMobileNumber, mobileNumber, CallStatus.NotSuccessfuly);
             }
-            Console.WriteLine("OnlineList remove " + _onlineList.ElementAt(0));
             _onlineList.Remove(mobileNumber);
-            targetPort.GetAnswer(mobileNumber, targetMobileNumber, CallStatus.NotSuccessfuly);
         }
 
         // поиск ключа по значению
