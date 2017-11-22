@@ -8,3 +8,8 @@ D:\TaskNumberThree\TaskNumberThree\obj\x86\Debug\TaskNumberThree.pdb
 D:\TaskNumberThree\TaskNumberThree\bin\Debug\TaskNumberThree.exe
 D:\TaskNumberThree\TaskNumberThree\bin\Debug\TaskNumberThree.pdb
 D:\TaskNumberThree\TaskNumberThree\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Square\Desktop\TaskNumberThree\TaskNumberThree\obj\x86\Debug\TaskNumberThree.exe
+C:\Users\Square\Desktop\TaskNumberThree\TaskNumberThree\obj\x86\Debug\TaskNumberThree.pdb
+C:\Users\Square\Desktop\TaskNumberThree\TaskNumberThree\bin\Debug\TaskNumberThree.exe
+C:\Users\Square\Desktop\TaskNumberThree\TaskNumberThree\bin\Debug\TaskNumberThree.pdb
+C:\Users\Square\Desktop\TaskNumberThree\TaskNumberThree\obj\x86\Debug\TaskNumberThree.csprojResolveAssemblyReference.cache

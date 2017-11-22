@@ -10,11 +10,12 @@ namespace TaskNumberThree.VirtualModel
     public class Terminal
     {
         private int _mobileNumber;
+        private readonly Port _defaultPort;
+
         public int MobileNumber
         {
             get { return _mobileNumber; }
         }
-        private Port _defaultPort;
 
         public Terminal(int mobileNumber, Port port)
         {
@@ -38,55 +39,56 @@ namespace TaskNumberThree.VirtualModel
 
         public void TurnOn()
         {
-            if (_defaultPort.GetStatus(this))
+            if (_defaultPort.TurnOn(this))
             {
-                _defaultPort.GetCallFromATSEvent += GetCallFromATS;
+                _defaultPort.GetCallFromAtsEvent += GetCallFromAts;
                 _defaultPort.GetAnswerEvent += GetAnswer;
+            }
+        }
+
+        public void TurnOff()
+        {
+            if (_defaultPort.TurnOff(this))
+            {
+                _defaultPort.GetCallFromAtsEvent -= GetCallFromAts;
+                _defaultPort.GetAnswerEvent -= GetAnswer;
+                Console.WriteLine("Телефон у {0} выключен", MobileNumber);
             }
         }
 
         // метод, принимающий некоторую информацию и генерирующий событие (через проверку)(292)
         public void CreateCall(int targetMobileNumber)
         {
-            OnNewCall(new CallEventArgs(_mobileNumber, targetMobileNumber));
+            OnNewCall(new CallEventArgs(MobileNumber, targetMobileNumber));
         }
 
         public void GetAnswer(object sender, AnswerEventArgs e)
         {
             if (e.Status == CallStatus.Successfuly)
             {
-                // mobile - вызывающий, target - принимающий
-                Console.WriteLine("ТЕРМИНАЛ " + e.MobileNumber + " : соединение установлено с абонентом " + e.TargetMobileNumber);
-                Console.WriteLine(_defaultPort.Status);
+                // логика успешного соединения
+                Console.WriteLine("Терминал {0} : соединение установлено с вызываемым абонентом {1}", e.MobileNumber, e.TargetMobileNumber);
                 Console.ReadLine();
             }
             else
             {
-                // реакция принимающего (его уведомляем, что я вызывающий сбросил)
-                Console.WriteLine("ТЕРМИНАЛ " + e.TargetMobileNumber + " : сбросил он => " + e.MobileNumber);
-                Console.WriteLine(_defaultPort.Status);
+                // логика сброса
+                Console.WriteLine("Терминал {0} : сбросил он => {1}", e.TargetMobileNumber, e.MobileNumber);
                 Console.ReadLine();
             }
         }
 
-
-
-
         // =======================================================================================
 
-
-
-
-        // Terminal 2 (for example)
-        public void GetCallFromATS(object sender, CallEventArgs e)
+        public void GetCallFromAts(object sender, CallEventArgs e)
         {
-            Console.WriteLine("ТЕРМИНАЛ: Запрос от " + "{0}" + " принят на терминале " + "{1}", e.MobileNumber, e.TargetMobileNumber);
+            Console.WriteLine("Терминал: Запрос от {0} принят на терминале {1}", e.MobileNumber, e.TargetMobileNumber);
             Console.ReadLine();
             Random answer = new Random();
             Console.WriteLine("Принять звонок?");
             if (Console.ReadKey().KeyChar == 'y')
             {
-                AnswerToCallFromATS(e, CallStatus.Successfuly);
+                AnswerToCallFromAts(e, CallStatus.Successfuly);
             }
             else
             {
@@ -94,9 +96,9 @@ namespace TaskNumberThree.VirtualModel
             }
         }
 
-        public void AnswerToCallFromATS(CallEventArgs e, CallStatus status)
+        public void AnswerToCallFromAts(CallEventArgs e, CallStatus status)
         {
-            Console.WriteLine("ТЕРМИНАЛ " + _mobileNumber + ": поднял трубку на звонок от " + e.MobileNumber);
+            Console.WriteLine("Терминал {0} : поднял трубку на звонок от {1}", e.TargetMobileNumber, e.MobileNumber);
             Console.ReadLine();
             OnAnswer(new AnswerEventArgs(e.MobileNumber, e.TargetMobileNumber, status));
         }
@@ -112,7 +114,7 @@ namespace TaskNumberThree.VirtualModel
 
         public void RejectedCall()
         {
-            Console.WriteLine("ТЕРМИНАЛ: Я сбросил звонок");
+            Console.WriteLine("Терминал {0}: Я сбросил звонок", MobileNumber);
             Console.ReadLine();
             OnEnd();
         }
@@ -122,7 +124,7 @@ namespace TaskNumberThree.VirtualModel
             EventHandler<EndEventArgs> temp = EndEvent;
             if (temp != null)
             {
-                temp(this, new EndEventArgs(_mobileNumber));
+                temp(this, new EndEventArgs(MobileNumber));
             }
         }
     }

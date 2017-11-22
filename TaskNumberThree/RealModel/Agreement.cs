@@ -27,7 +27,7 @@ namespace TaskNumberThree.RealModel
             {
                 TariffPlan = newTariffPlan;
                 DateOfLastChange = DateTime.Now;
-                Console.WriteLine("Your tariff plan " + "{0}" + " was changed successfully to " + "{1}" + " !"
+                Console.WriteLine("Your tariff plan {0} was changed successfully to {1} !"
                     , TariffPlan.Name, newTariffPlan.Name);
                 return true;
             }

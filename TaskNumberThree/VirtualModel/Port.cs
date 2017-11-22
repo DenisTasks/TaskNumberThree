@@ -16,7 +16,7 @@ namespace TaskNumberThree.VirtualModel
         }
 
         public event EventHandler<CallEventArgs> NewCallEvent;
-        public event EventHandler<CallEventArgs> GetCallFromATSEvent;
+        public event EventHandler<CallEventArgs> GetCallFromAtsEvent;
         public event EventHandler<AnswerEventArgs> NewAnswerEvent;
         public event EventHandler<AnswerEventArgs> GetAnswerEvent;
         public event EventHandler<EndEventArgs> EndEvent;
@@ -30,14 +30,30 @@ namespace TaskNumberThree.VirtualModel
             }
         }
 
-        public bool GetStatus(Terminal terminal)
+        public bool TurnOn(Terminal terminal)
         {
             if (Status == PortStatus.Disabled)
             {
                 Status = PortStatus.Enabled;
-                terminal.NewCallEvent += CreateCall; // как только произойдёт событие в терминале, вызовется метод in Port
-                terminal.AnswerEvent += CreateAnswer; // второй порт (сигнализирует, что вызываемый абонент как-то ответил)
-                terminal.EndEvent += CreateEnd; // второй порт сообщает на АТС, что звонок сброшен
+                terminal.NewCallEvent += CreateCall;
+                terminal.AnswerEvent += CreateAnswer;
+                terminal.EndEvent += CreateEnd;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool TurnOff(Terminal terminal)
+        {
+            if (Status == PortStatus.Enabled || Status == PortStatus.Busy)
+            {
+                Status = PortStatus.Disabled;
+                terminal.NewCallEvent -= CreateCall;
+                terminal.AnswerEvent -= CreateAnswer;
+                terminal.EndEvent -= CreateEnd;
                 return true;
             }
             else
@@ -74,19 +90,16 @@ namespace TaskNumberThree.VirtualModel
         //=======================================================================
 
 
-
-
-        // Port2 (for example)
-        public void CallFromATS(int mobileNumber, int targetMobileNumber)
+        public void CallFromAts(int mobileNumber, int targetMobileNumber)
         {
-            Console.WriteLine("ПОРТ: Поступил запрос с АТС с номера " + mobileNumber + " на номер " + targetMobileNumber);
+            Console.WriteLine("Порт: поступил запрос с АТС с номера {0} на номер {1}", mobileNumber, targetMobileNumber);
             Status = PortStatus.Busy;
-            OnNewCallFromATS(new CallEventArgs(mobileNumber, targetMobileNumber));
+            OnNewCallFromAts(new CallEventArgs(mobileNumber, targetMobileNumber));
         }
 
-        protected virtual void OnNewCallFromATS(CallEventArgs e)
+        protected virtual void OnNewCallFromAts(CallEventArgs e)
         {
-            EventHandler<CallEventArgs> temp = GetCallFromATSEvent;
+            EventHandler<CallEventArgs> temp = GetCallFromAtsEvent;
             if (temp != null)
             {
                 temp(this, e);
@@ -95,7 +108,7 @@ namespace TaskNumberThree.VirtualModel
 
         public void CreateAnswer(object sender, AnswerEventArgs e)
         {
-            Console.WriteLine("ПОРТ: " + e.MobileNumber + " дозвонился до " + e.TargetMobileNumber);
+            Console.WriteLine("Порт: {0} дозвонился до {1}", e.MobileNumber, e.TargetMobileNumber);
             Console.ReadLine();
             OnNewAnswer(e);
         }
@@ -111,9 +124,8 @@ namespace TaskNumberThree.VirtualModel
 
         public void CreateEnd(object sender, EndEventArgs e)
         {
-            Console.WriteLine("ПОРТ: " + e.MobileNumber + " сбросил звонок ");
+            Console.WriteLine("Порт: {0} сбросил звонок ", e.MobileNumber);
             Status = PortStatus.Enabled;
-            Console.WriteLine("ПОРТ: " + Status);
             Console.ReadLine();
             OnEnd(e);
         }
