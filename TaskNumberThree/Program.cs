@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using TaskNumberThree.RealModel;
 using TaskNumberThree.VirtualModel;
+using TaskNumberThree.RealModel.Auxiliary;
 
 namespace TaskNumberThree
 {
@@ -13,23 +11,72 @@ namespace TaskNumberThree
         static void Main(string[] args)
         {
             ATS mts = new ATS();
+            Billing.Billing billing = new Billing.Billing(mts);
             Terminal myTerminal = mts.NewUserWithTerminal(
-                new TariffPlan("Unlim", 10, 4, 20), 
-                new User("Denis", "Tarasevich", 10), 298666683);
+                new TariffPlan(TariffList.Onliner), 
+                new User("Denis", "Tarasevich", -5), 291111111);
             Terminal yourTerminal = mts.NewUserWithTerminal(
-                new TariffPlan("Unlim", 10, 4, 20),
-                new User("Sergey", "Tarasevich", 10), 298840666);
-            Terminal yourTerminal2 = mts.NewUserWithTerminal(
-                new TariffPlan("Unlim", 10, 4, 20),
-                new User("Viachaslau", "Tarasevich", 10), 295399992);
+                new TariffPlan(TariffList.Child),
+                new User("Sergey", "Tarasevich", 20), 292222222);
+            Terminal herTerminal = mts.NewUserWithTerminal(
+                new TariffPlan(TariffList.Unlim),
+                new User("Ina", "Tarasevich", 20), 293333333);
             myTerminal.TurnOn();
             yourTerminal.TurnOn();
-            yourTerminal2.TurnOn();
+            herTerminal.TurnOn();
+            myTerminal.DontHaveMoney();
+
             myTerminal.CreateCall(yourTerminal.MobileNumber);
-            Thread.Sleep(1000);
+            billing.AddBalance(myTerminal.MobileNumber, 20);
+
+            myTerminal.CreateCall(yourTerminal.MobileNumber);
+            Thread.Sleep(1100);
             myTerminal.RejectedCall();
-            yourTerminal2.CreateCall(myTerminal.MobileNumber);
+            Spaces();
+
+            myTerminal.CreateCall(yourTerminal.MobileNumber);
+            Thread.Sleep(800);
+            yourTerminal.RejectedCall();
+            Spaces();
+
             yourTerminal.CreateCall(myTerminal.MobileNumber);
+            Thread.Sleep(1200);
+            myTerminal.RejectedCall();
+            Spaces();
+
+            herTerminal.CreateCall(myTerminal.MobileNumber);
+            Thread.Sleep(1200);
+            herTerminal.RejectedCall();
+            Spaces();
+
+            // dont answer
+            herTerminal.CreateCall(myTerminal.MobileNumber);
+            Spaces();
+
+            myTerminal.CreateCall(yourTerminal.MobileNumber);
+            herTerminal.CreateCall(myTerminal.MobileNumber);
+            herTerminal.TurnOff();
+            myTerminal.RejectedCall();
+            myTerminal.CreateCall(herTerminal.MobileNumber);
+            Spaces();
+
+            myTerminal.ChangeTariffPlan(new TariffPlan(TariffList.Guest));
+            Spaces();
+
+            billing.GetPdfSortByDate(myTerminal.MobileNumber);
+            billing.GetPdfSortByToWriteOff(myTerminal.MobileNumber);
+            billing.GetPdfSortByAnyNumber(myTerminal.MobileNumber);
+            billing.GetPdfSortByDate(yourTerminal.MobileNumber);
+            billing.GetPdfSortByDate(herTerminal.MobileNumber);
+
+            Console.ReadLine();
+        }
+
+        public static void Spaces()
+        {
+            Console.WriteLine();
+            Console.WriteLine("=================================");
+            Console.WriteLine();
         }
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TaskNumberThree.VirtualModel;
+using TaskNumberThree.Interfaces;
+using TaskNumberThree.VirtualModel.Auxiliary;
 
 namespace TaskNumberThree.AnyEventArgs
 {

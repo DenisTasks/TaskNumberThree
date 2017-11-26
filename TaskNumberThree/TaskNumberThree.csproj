@@ -34,8 +34,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PdfSharp, Version=1.32.3057.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\PDFsharp.1.32.3057.0\lib\net20\PdfSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PdfSharp.Charting, Version=1.32.3057.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\PDFsharp.1.32.3057.0\lib\net20\PdfSharp.Charting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,20 +55,33 @@
     <Compile Include="AnyEventArgs\AnswerEventArgs.cs" />
     <Compile Include="AnyEventArgs\CallEventArgs.cs" />
     <Compile Include="AnyEventArgs\EndEventArgs.cs" />
-    <Compile Include="AnyEventArgs\ICreateCall.cs" />
+    <Compile Include="AnyEventArgs\TariffEventArgs.cs" />
+    <Compile Include="Billing\Pdf\PdfCreator.cs" />
+    <Compile Include="Interfaces\ICreateCall.cs" />
+    <Compile Include="Billing\Billing.cs" />
     <Compile Include="Interfaces\IAgreement.cs" />
+    <Compile Include="Interfaces\ICanCall.cs" />
+    <Compile Include="Interfaces\IGetDetalisation.cs" />
+    <Compile Include="Interfaces\IPdfCreator.cs" />
+    <Compile Include="Interfaces\ISaveInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RealModel\Agreement.cs" />
     <Compile Include="RealModel\TariffPlan.cs" />
     <Compile Include="RealModel\User.cs" />
     <Compile Include="VirtualModel\ATS.cs" />
-    <Compile Include="VirtualModel\CallStatus.cs" />
+    <Compile Include="VirtualModel\Auxiliary\CallInfo.cs" />
+    <Compile Include="VirtualModel\Auxiliary\CallInOut.cs" />
+    <Compile Include="VirtualModel\Auxiliary\CallStatus.cs" />
+    <Compile Include="VirtualModel\Auxiliary\CallString.cs" />
+    <Compile Include="RealModel\Auxiliary\TariffList.cs" />
     <Compile Include="VirtualModel\Port.cs" />
-    <Compile Include="VirtualModel\PortStatus.cs" />
+    <Compile Include="VirtualModel\Auxiliary\PortStatus.cs" />
     <Compile Include="VirtualModel\Terminal.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

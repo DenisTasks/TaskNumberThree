@@ -1,32 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using TaskNumberThree.AnyEventArgs;
-using System.Threading;
+using TaskNumberThree.RealModel;
+using TaskNumberThree.VirtualModel.Auxiliary;
 
 namespace TaskNumberThree.VirtualModel
 {
     public class Terminal
     {
-        private int _mobileNumber;
-        public int MobileNumber
-        {
-            get { return _mobileNumber; }
-        }
-        private Port _defaultPort;
+        private readonly Port _defaultPort;
+
+        public int MobileNumber { get; }
 
         public Terminal(int mobileNumber, Port port)
         {
-            _mobileNumber = mobileNumber;
+            MobileNumber = mobileNumber;
             _defaultPort = port;
         }
 
         public event EventHandler<CallEventArgs> NewCallEvent;
         public event EventHandler<AnswerEventArgs> AnswerEvent;
         public event EventHandler<EndEventArgs> EndEvent;
+        public event EventHandler<TariffEventArgs> ChangeTariffEvent;
 
-        // виртуальный защищенный метод, проверяющий наличие подписчиков(290)
         protected virtual void OnNewCall(CallEventArgs e)
         {
             EventHandler<CallEventArgs> temp = NewCallEvent;
@@ -35,72 +30,6 @@ namespace TaskNumberThree.VirtualModel
                 temp(this, e);
             }
         }
-
-        public void TurnOn()
-        {
-            if (_defaultPort.GetStatus(this))
-            {
-                _defaultPort.GetCallFromATSEvent += GetCallFromATS;
-                _defaultPort.GetAnswerEvent += GetAnswer;
-            }
-        }
-
-        // метод, принимающий некоторую информацию и генерирующий событие (через проверку)(292)
-        public void CreateCall(int targetMobileNumber)
-        {
-            OnNewCall(new CallEventArgs(_mobileNumber, targetMobileNumber));
-        }
-
-        public void GetAnswer(object sender, AnswerEventArgs e)
-        {
-            if (e.Status == CallStatus.Successfuly)
-            {
-                // mobile - вызывающий, target - принимающий
-                Console.WriteLine("ТЕРМИНАЛ " + e.MobileNumber + " : соединение установлено с абонентом " + e.TargetMobileNumber);
-                Console.WriteLine(_defaultPort.Status);
-                Console.ReadLine();
-            }
-            else
-            {
-                // реакция принимающего (его уведомляем, что я вызывающий сбросил)
-                Console.WriteLine("ТЕРМИНАЛ " + e.TargetMobileNumber + " : сбросил он => " + e.MobileNumber);
-                Console.WriteLine(_defaultPort.Status);
-                Console.ReadLine();
-            }
-        }
-
-
-
-
-        // =======================================================================================
-
-
-
-
-        // Terminal 2 (for example)
-        public void GetCallFromATS(object sender, CallEventArgs e)
-        {
-            Console.WriteLine("ТЕРМИНАЛ: Запрос от " + "{0}" + " принят на терминале " + "{1}", e.MobileNumber, e.TargetMobileNumber);
-            Console.ReadLine();
-            Random answer = new Random();
-            Console.WriteLine("Принять звонок?");
-            if (Console.ReadKey().KeyChar == 'y')
-            {
-                AnswerToCallFromATS(e, CallStatus.Successfuly);
-            }
-            else
-            {
-                RejectedCall();
-            }
-        }
-
-        public void AnswerToCallFromATS(CallEventArgs e, CallStatus status)
-        {
-            Console.WriteLine("ТЕРМИНАЛ " + _mobileNumber + ": поднял трубку на звонок от " + e.MobileNumber);
-            Console.ReadLine();
-            OnAnswer(new AnswerEventArgs(e.MobileNumber, e.TargetMobileNumber, status));
-        }
-
         protected virtual void OnAnswer(AnswerEventArgs e)
         {
             EventHandler<AnswerEventArgs> temp = AnswerEvent;
@@ -109,21 +38,91 @@ namespace TaskNumberThree.VirtualModel
                 temp(this, e);
             }
         }
-
-        public void RejectedCall()
-        {
-            Console.WriteLine("ТЕРМИНАЛ: Я сбросил звонок");
-            Console.ReadLine();
-            OnEnd();
-        }
-
         protected virtual void OnEnd()
         {
             EventHandler<EndEventArgs> temp = EndEvent;
             if (temp != null)
             {
-                temp(this, new EndEventArgs(_mobileNumber));
+                temp(this, new EndEventArgs(MobileNumber));
             }
         }
+        protected virtual void OnChangeTariffPlan(TariffEventArgs e)
+        {
+            EventHandler<TariffEventArgs> temp = ChangeTariffEvent;
+            if (temp != null)
+            {
+                temp(this, e);
+            }
+        }
+
+        public void TurnOn()
+        {
+            if (_defaultPort.TurnOn(this))
+            {
+                _defaultPort.GetCallFromAtsEvent += GetCallFromAts;
+                _defaultPort.GetAnswerEvent += GetAnswer;
+                Console.WriteLine("-Terminal is ON at the {0}", MobileNumber);
+            }
+        }
+        public void TurnOff()
+        {
+            if (_defaultPort.TurnOff(this))
+            {
+                _defaultPort.GetCallFromAtsEvent -= GetCallFromAts;
+                _defaultPort.GetAnswerEvent -= GetAnswer;
+                Console.WriteLine("-Terminal is OFF at the {0}", MobileNumber);
+            }
+        }
+
+        public void DontHaveMoney()
+        {
+            _defaultPort.Status = PortStatus.Blocked;
+        }
+        public void ChangeTariffPlan(TariffPlan tariffPlan)
+        {
+            OnChangeTariffPlan(new TariffEventArgs(MobileNumber, tariffPlan));
+        }
+        public void CreateCall(int targetMobileNumber)
+        {
+            Console.WriteLine("-Terminal {0} : try call to {1}", MobileNumber, targetMobileNumber);
+            OnNewCall(new CallEventArgs(MobileNumber, targetMobileNumber));
+        }
+        public void GetAnswer(object sender, AnswerEventArgs e)
+        {
+            if (e.Status == CallStatus.Successfuly)
+            {
+                Console.WriteLine("-Terminal {0} : connection established with the target number {1}", e.MobileNumber, e.TargetMobileNumber);
+            }
+            else
+            {
+                Console.WriteLine("-Terminal {0} : connection disconnected at the initiative from {1}", e.TargetMobileNumber, e.MobileNumber);
+            }
+        }
+        public void GetCallFromAts(object sender, CallEventArgs e)
+        {
+            Console.WriteLine("-Terminal {1} : request accepted from {0}", e.MobileNumber, e.TargetMobileNumber);
+            Console.WriteLine("-To answer a call? Press <y> for answer");
+            if (Console.ReadKey().KeyChar == 'y')
+            {
+                Console.WriteLine();
+                AnswerToCallFromAts(e, CallStatus.Successfuly);
+            }
+            else
+            {
+                RejectedCall();
+            }
+        }
+        public void AnswerToCallFromAts(CallEventArgs e, CallStatus status)
+        {
+            Console.WriteLine("-Terminal {0} : answered the call from {1}", e.TargetMobileNumber, e.MobileNumber);
+            OnAnswer(new AnswerEventArgs(e.MobileNumber, e.TargetMobileNumber, status));
+        }
+        public void RejectedCall()
+        {
+            Console.WriteLine("-Terminal {0}: I ended the call", MobileNumber);
+            OnEnd();
+        }
+
+
     }
 }

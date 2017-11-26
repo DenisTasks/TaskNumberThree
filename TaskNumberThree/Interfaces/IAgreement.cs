@@ -8,9 +8,9 @@ namespace TaskNumberThree.Interfaces
 {
     public interface IAgreement
     {
-        TariffPlan TariffPlan { get; }
+        TariffPlan TariffPlan { get; set; }
         User User { get; }
         int MobileNumber { get; }
-        bool ChangeTariffPlan(TariffPlan tariffPlan);
+        DateTime DateOfLastChange { get; set; }
     }
 }

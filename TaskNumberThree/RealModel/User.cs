@@ -9,7 +9,7 @@ namespace TaskNumberThree.RealModel
     {
         public string Name { get; private set; }
         public string LastName { get; private set; }
-        public int Balance { get; private set; }
+        public double Balance { get; private set; }
 
         public User(string name, string lastName)
         {
@@ -17,17 +17,17 @@ namespace TaskNumberThree.RealModel
             LastName = lastName;
             Balance = 0;
         }
-        public User(string name, string lastName, int balance)
+        public User(string name, string lastName, double balance)
         {
             Name = name;
             LastName = lastName;
-            Balance = balance;
+            Balance = Math.Round(balance, 2);
         }
-        public void AddBalance(int balance)
+        public void AddBalance(double balance)
         {
             Balance = Balance + balance;
         }
-        public void RemoveBalance(int balance)
+        public void RemoveBalance(double balance)
         {
             Balance = Balance - balance;
         }

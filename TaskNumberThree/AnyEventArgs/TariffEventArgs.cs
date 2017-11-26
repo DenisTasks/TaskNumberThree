@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TaskNumberThree.VirtualModel;
-using TaskNumberThree.Interfaces;
+using TaskNumberThree.RealModel;
 
 namespace TaskNumberThree.AnyEventArgs
 {
-    public class EndEventArgs: EventArgs, ICreateCall
+    public class TariffEventArgs: EventArgs
     {
         public int MobileNumber { get; private set; }
-        public int TargetMobileNumber { get; private set; }
+        public TariffPlan TariffPlan { get; private set; }
 
-        public EndEventArgs(int mobileNumber)
+        public TariffEventArgs(int mobileNumber, TariffPlan tariffPlan)
         {
             MobileNumber = mobileNumber;
+            TariffPlan = tariffPlan;
         }
     }
 }
