@@ -8,26 +8,38 @@ using TaskNumberThree.VirtualModel.Auxiliary;
 
 namespace TaskNumberThree.VirtualModel
 {
+<<<<<<< HEAD
     public class ATS: ICanCall
+=======
+    public class ATS: IATS
+>>>>>>> ee681e88e8b7804b0cab92122c87b03b9ed79be4
     {
         private readonly IDictionary<int, Tuple<IAgreement, Port>> _users;
         private readonly IDictionary<int, int> _onlineList;
         private readonly ICollection<CallInfo> _callInfo;
 
+<<<<<<< HEAD
         public ICollection<CallInfo> GetCallInfo()
+=======
+        public ICollection<CallInfo> GetInfo()
+>>>>>>> ee681e88e8b7804b0cab92122c87b03b9ed79be4
         {
             return _callInfo;
         }
 
+<<<<<<< HEAD
         public IDictionary<int, Tuple<IAgreement, Port>> GetUsersInfo()
         {
             return _users;
         }
+=======
+>>>>>>> ee681e88e8b7804b0cab92122c87b03b9ed79be4
         public ATS()
         {
             _users = new Dictionary<int, Tuple<IAgreement, Port>>();
             _onlineList = new Dictionary<int, int>();
             _callInfo = new List<CallInfo>();
+<<<<<<< HEAD
         }
 
         public int CanICall(int mobileNumber, int targetMobileNumber)
@@ -59,6 +71,8 @@ namespace TaskNumberThree.VirtualModel
             {
                 Console.WriteLine("---ATS : Dear subscriber {0}, please, wait a month after last change of your tariff plan!", e.MobileNumber);
             }
+=======
+>>>>>>> ee681e88e8b7804b0cab92122c87b03b9ed79be4
         }
 
         public Terminal NewUserWithTerminal(TariffPlan tariffPlan, User user, int mobileNumber)
@@ -78,16 +92,33 @@ namespace TaskNumberThree.VirtualModel
         {
             int mobileNumber = e.MobileNumber;
             int targetMobileNumber = e.TargetMobileNumber;
+<<<<<<< HEAD
             Port targetPort = _users[targetMobileNumber].Item2;
             #region CallEventArgs
             if (e is CallEventArgs)
             {
                 Console.WriteLine("---ATS : New call from {0} to {1}", mobileNumber, targetMobileNumber);
                 if (CanICall(e.MobileNumber, e.TargetMobileNumber) == 0)
+=======
+            Port port = _users[mobileNumber].Item2;
+            Port targetPort = _users[targetMobileNumber].Item2;
+            CallInfo callInfo;
+            #region CallEventArgs
+            if (e is CallEventArgs)
+            {
+                Console.WriteLine("АТС: Новый звонок с {0} на {1}", mobileNumber, targetMobileNumber);
+                Console.ReadLine();
+                if (_users[mobileNumber].Item1.User.Balance > 0)
+>>>>>>> ee681e88e8b7804b0cab92122c87b03b9ed79be4
                 {
                     if (targetPort.Status == PortStatus.Enabled)
                     {
                         _onlineList.Add(mobileNumber, targetMobileNumber);
+<<<<<<< HEAD
+=======
+                        callInfo = new CallInfo(mobileNumber, targetMobileNumber, DateTime.Now);
+                        _callInfo.Add(callInfo);
+>>>>>>> ee681e88e8b7804b0cab92122c87b03b9ed79be4
                         targetPort.CallFromAts(mobileNumber, targetMobileNumber);
                     }
                     else if (targetPort.Status == PortStatus.Busy)
@@ -132,16 +163,33 @@ namespace TaskNumberThree.VirtualModel
             // если завершил звонок вызывающий абонент
             if (_onlineList.Any(x => x.Key.Equals(e.MobileNumber)))
             {
+<<<<<<< HEAD
                 Console.WriteLine("---ATS : The call was completed by the calling subscriber {0}", e.MobileNumber);
                 endFrom = e.MobileNumber;
                 endTo = _onlineList[endFrom];
                 targetPort = _users[endTo].Item2;
                 ToWriteOff(endFrom);
+=======
+                Console.WriteLine("Звонок завершил вызывающий абонент {0}", e.MobileNumber);
+                endFrom = e.MobileNumber;
+                endTo = _onlineList[endFrom];
+                targetPort = _users[endTo].Item2;
+
+                ToWriteOff(endFrom);
+                //callinfo = _callInfo.Last(x => x.MobileNumber.Equals(endFrom));
+                //callinfo.FinishCall = DateTime.Now;
+                //double toWriteOff = TimeSpan.FromTicks((callinfo.FinishCall - callinfo.StartCall).Ticks).TotalMinutes
+                //                    * _users[endFrom].Item1.TariffPlan.CostPerMinute;
+                //callinfo.ToWriteOff = Math.Round(toWriteOff, 2);
+                //_users[endFrom].Item1.User.RemoveBalance(callinfo.ToWriteOff);
+
+>>>>>>> ee681e88e8b7804b0cab92122c87b03b9ed79be4
                 _onlineList.Remove(endFrom);
                 targetPort.GetAnswer(endFrom, endTo, CallStatus.NotSuccessfuly);
             }
             // if (_onlineList.Any(x => x.Value.Equals(e.MobileNumber)))
             // если завершил звонок вызываемый абонент
+<<<<<<< HEAD
             else
             {
                 Console.WriteLine("---ATS : The call was completed by the called subscriber {0}", e.MobileNumber);
@@ -171,6 +219,39 @@ namespace TaskNumberThree.VirtualModel
             }
         }
 
+=======
+            else
+            {
+                Console.WriteLine("Звонок завершил вызываемый абонент {0}", e.MobileNumber);
+                endFrom = e.MobileNumber;
+                endTo = GetKey(e.MobileNumber);
+                targetPort = _users[endTo].Item2;
+
+                ToWriteOff(endTo);
+                //callinfo = _callInfo.Last(x => x.MobileNumber.Equals(endTo));
+                //callinfo.FinishCall = DateTime.Now;
+                //double toWriteOff = TimeSpan.FromTicks((callinfo.FinishCall - callinfo.StartCall).Ticks).TotalMinutes
+                //                    * _users[endTo].Item1.TariffPlan.CostPerMinute;
+                //callinfo.ToWriteOff = toWriteOff;
+                //_users[endTo].Item1.User.RemoveBalance(callinfo.ToWriteOff);
+
+                targetPort.GetAnswer(endFrom, endTo, CallStatus.NotSuccessfuly);
+                _onlineList.Remove(endTo);
+            }
+        }
+
+        public void ToWriteOff(int mobileNumber)
+        {
+            CallInfo callinfo;
+            callinfo = _callInfo.Last(x => x.MobileNumber.Equals(mobileNumber));
+            callinfo.FinishCall = DateTime.Now;
+            double toWriteOff = (TimeSpan.FromTicks((callinfo.FinishCall - callinfo.StartCall).Ticks).TotalSeconds / 60) * _users[mobileNumber].Item1.TariffPlan.CostPerMinute;
+            toWriteOff += (TimeSpan.FromTicks((callinfo.FinishCall - callinfo.StartCall).Ticks).TotalSeconds % 60) * (_users[mobileNumber].Item1.TariffPlan.CostPerMinute / 60);
+            callinfo.ToWriteOff = Math.Round(toWriteOff, 2);
+            _users[mobileNumber].Item1.User.RemoveBalance(callinfo.ToWriteOff);
+        }
+        // поиск ключа по значению
+>>>>>>> ee681e88e8b7804b0cab92122c87b03b9ed79be4
         public int GetKey(int x)
         {
             foreach (var item in _onlineList)

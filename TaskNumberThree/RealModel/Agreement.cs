@@ -20,5 +20,26 @@ namespace TaskNumberThree.RealModel
             MobileNumber = mobileNumber;
             DateOfLastChange = DateTime.Now;
         }
+<<<<<<< HEAD
+=======
+        public bool ChangeTariffPlan(TariffPlan newTariffPlan)
+        {
+            // не забыть проверить на декабрь(12)-январь(1)
+            if (DateOfLastChange.Month <= (DateTime.Now.Month - 1))
+            {
+                TariffPlan = newTariffPlan;
+                DateOfLastChange = DateTime.Now;
+                Console.WriteLine("Your tariff plan {0} was changed successfully to {1} !"
+                    , TariffPlan.Name, newTariffPlan.Name);
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("Please, wait a month after last change of your tariff plan!");
+                return false;
+            }
+        }
+
+>>>>>>> ee681e88e8b7804b0cab92122c87b03b9ed79be4
     }
 }

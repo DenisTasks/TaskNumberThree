@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+<<<<<<< HEAD
 using System.Threading;
 using TaskNumberThree.VirtualModel;
 using TaskNumberThree.Interfaces;
@@ -81,12 +82,31 @@ namespace TaskNumberThree.Billing
             var newList = GetDetalisation(mobileNumber).OrderBy(x => x.AnyMobileNumber).ToList();
             IPdfCreator pdfCreator = new PdfCreator();
             pdfCreator.PdfCreate(newList, String.Format("SortByAnyNumber{0}", mobileNumber));
+=======
+using System.Text;
+using TaskNumberThree.VirtualModel;
+using TaskNumberThree.Interfaces;
+
+namespace TaskNumberThree.Billing
+{
+    public class Billing
+    {
+        private readonly ISaveInfo<CallInfo> _callInfo;
+
+        public Billing(ISaveInfo<CallInfo> callInfo)
+        {
+            _callInfo = callInfo;
+>>>>>>> ee681e88e8b7804b0cab92122c87b03b9ed79be4
         }
 
         public ICollection<CallString> GetDetalisation(int mobileNumber)
         {
             ICollection<CallString> callStrings = new List<CallString>();
+<<<<<<< HEAD
             var getMyCalls = _callInfo.GetCallInfo().
+=======
+            var getMyCalls = _callInfo.GetInfo().
+>>>>>>> ee681e88e8b7804b0cab92122c87b03b9ed79be4
                 Where(x => x.MobileNumber == mobileNumber || x.TargetMobileNumber == mobileNumber).ToList();
             foreach (var item in getMyCalls)
             {

@@ -13,9 +13,12 @@ C:\Users\Square\Desktop\TaskNumberThree\TaskNumberThree\obj\x86\Debug\TaskNumber
 C:\Users\Square\Desktop\TaskNumberThree\TaskNumberThree\bin\Debug\TaskNumberThree.exe
 C:\Users\Square\Desktop\TaskNumberThree\TaskNumberThree\bin\Debug\TaskNumberThree.pdb
 C:\Users\Square\Desktop\TaskNumberThree\TaskNumberThree\obj\x86\Debug\TaskNumberThree.csprojResolveAssemblyReference.cache
+<<<<<<< HEAD
 C:\Users\Square\Desktop\TaskNumberThree\TaskNumberThree\bin\Debug\PdfSharp.Charting.dll
 C:\Users\Square\Desktop\TaskNumberThree\TaskNumberThree\bin\Debug\PdfSharp.dll
 C:\Users\Square\Desktop\TaskNumberThree\TaskNumberThree\bin\Debug\PdfSharp.xml
 C:\Users\Square\Desktop\TaskNumberThree\TaskNumberThree\bin\Debug\PdfSharp.Charting.xml
 C:\Users\Square\Desktop\TaskNumberThree\TaskNumberThree\bin\Debug\de\PdfSharp.resources.dll
 C:\Users\Square\Desktop\TaskNumberThree\TaskNumberThree\bin\Debug\de\PdfSharp.Charting.resources.dll
+=======
+>>>>>>> ee681e88e8b7804b0cab92122c87b03b9ed79be4

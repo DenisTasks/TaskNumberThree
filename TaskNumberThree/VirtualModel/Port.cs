@@ -28,12 +28,41 @@ namespace TaskNumberThree.VirtualModel
                 temp(this, e);
             }
         }
+<<<<<<< HEAD
         protected virtual void OnGetAnswer(AnswerEventArgs e)
+=======
+
+        public bool TurnOn(Terminal terminal)
+>>>>>>> ee681e88e8b7804b0cab92122c87b03b9ed79be4
         {
             EventHandler<AnswerEventArgs> temp = GetAnswerEvent;
             if (temp != null)
             {
+<<<<<<< HEAD
                 temp(this, e);
+=======
+                Status = PortStatus.Enabled;
+                terminal.NewCallEvent += CreateCall;
+                terminal.AnswerEvent += CreateAnswer;
+                terminal.EndEvent += CreateEnd;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool TurnOff(Terminal terminal)
+        {
+            if (Status == PortStatus.Enabled || Status == PortStatus.Busy)
+            {
+                Status = PortStatus.Disabled;
+                terminal.NewCallEvent -= CreateCall;
+                terminal.AnswerEvent -= CreateAnswer;
+                terminal.EndEvent -= CreateEnd;
+                return true;
+>>>>>>> ee681e88e8b7804b0cab92122c87b03b9ed79be4
             }
         }
         protected virtual void OnNewCallFromAts(CallEventArgs e)
@@ -68,6 +97,7 @@ namespace TaskNumberThree.VirtualModel
                 temp(this, e);
             }
         }
+<<<<<<< HEAD
         public bool TurnOn(Terminal terminal)
         {
             if (Status == PortStatus.Disabled)
@@ -87,6 +117,24 @@ namespace TaskNumberThree.VirtualModel
         public bool TurnOff(Terminal terminal)
         {
             if (Status == PortStatus.Enabled || Status == PortStatus.Busy)
+=======
+
+
+        //=======================================================================
+
+
+        public void CallFromAts(int mobileNumber, int targetMobileNumber)
+        {
+            Console.WriteLine("Порт: поступил запрос с АТС с номера {0} на номер {1}", mobileNumber, targetMobileNumber);
+            Status = PortStatus.Busy;
+            OnNewCallFromAts(new CallEventArgs(mobileNumber, targetMobileNumber));
+        }
+
+        protected virtual void OnNewCallFromAts(CallEventArgs e)
+        {
+            EventHandler<CallEventArgs> temp = GetCallFromAtsEvent;
+            if (temp != null)
+>>>>>>> ee681e88e8b7804b0cab92122c87b03b9ed79be4
             {
                 Status = PortStatus.Disabled;
                 terminal.NewCallEvent -= CreateCall;
@@ -103,7 +151,13 @@ namespace TaskNumberThree.VirtualModel
 
         public void CreateChange(object sender, TariffEventArgs e)
         {
+<<<<<<< HEAD
             OnChangeTariffPlan(e);
+=======
+            Console.WriteLine("Порт: {0} дозвонился до {1}", e.MobileNumber, e.TargetMobileNumber);
+            Console.ReadLine();
+            OnNewAnswer(e);
+>>>>>>> ee681e88e8b7804b0cab92122c87b03b9ed79be4
         }
         public void CreateCall(object sender, CallEventArgs e)
         {
@@ -139,8 +193,14 @@ namespace TaskNumberThree.VirtualModel
         }
         public void CreateEnd(object sender, EndEventArgs e)
         {
+<<<<<<< HEAD
             Console.WriteLine("--Port: {0} ended the call", e.MobileNumber);
             Status = PortStatus.Enabled;
+=======
+            Console.WriteLine("Порт: {0} сбросил звонок ", e.MobileNumber);
+            Status = PortStatus.Enabled;
+            Console.ReadLine();
+>>>>>>> ee681e88e8b7804b0cab92122c87b03b9ed79be4
             OnEnd(e);
         }
     }
